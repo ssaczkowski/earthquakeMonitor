@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         countriesList.add("España");
         countriesList.add("Perú");
 
-        
+
         ArrayAdapter<String> countriesAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, countriesList);
         earthquakeListView.setAdapter(countriesAdapter);
     }
