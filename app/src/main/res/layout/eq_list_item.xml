@@ -24,6 +24,6 @@
     <ImageView
         android:layout_width="10dp"
         android:layout_height="11dp"
-        android:source="@drawable/chevron-right_24.png" />
+        android:src="@drawable/chevron_right"/>
 
 </LinearLayout>
