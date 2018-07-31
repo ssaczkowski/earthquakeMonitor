@@ -24,26 +24,46 @@ public class EqAdapter extends ArrayAdapter<Earthquake> {
     public EqAdapter(Context context, int resource, List<Earthquake> earthquakes) {
         super(context, resource, earthquakes);
 
-        this.context= context;
-        this.eqList= new ArrayList<Earthquake>(earthquakes);
-        this.layoutId=resource;
+        this.context = context;
+        this.eqList = new ArrayList<Earthquake>(earthquakes);
+        this.layoutId = resource;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rootView = inflater.inflate(layoutId,null);
+        ViewHolder holder ;
 
-        TextView magnitudeTextView = (TextView) rootView.findViewById(R.id.eq_list_item_magnitude);
-        TextView placeTextView = (TextView) rootView.findViewById(R.id.eq_list_item_place);
+        if(convertView == null) {
+
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            convertView = inflater.inflate(layoutId, null);
+
+            holder = new ViewHolder();
+
+            holder.magnitudeTextView = (TextView) convertView.findViewById(R.id.eq_list_item_magnitude);
+            holder.placeTextView = (TextView) convertView.findViewById(R.id.eq_list_item_place);
+
+            convertView.setTag(holder);
+        }else{
+            holder = (ViewHolder) convertView.getTag();
+        }
+
 
         Earthquake earthquake = eqList.get(position);
 
-        magnitudeTextView.setText(earthquake.getMagnitude());
-        placeTextView.setText(earthquake.getPlace());
+        holder.magnitudeTextView.setText(earthquake.getMagnitude());
+        holder.placeTextView.setText(earthquake.getPlace());
 
-        return rootView;
+        return convertView;
     }
+
+    private class ViewHolder{
+        public TextView magnitudeTextView;
+        public TextView placeTextView;
+    }
+
+
 }
