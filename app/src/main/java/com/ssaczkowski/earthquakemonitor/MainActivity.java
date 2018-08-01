@@ -7,6 +7,10 @@ import android.widget.ListView;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +21,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncTask.DownloadEqsInterface{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         DownloadEqsAsyncTask downloadEqsAsyncTask = null;
         downloadEqsAsyncTask = new DownloadEqsAsyncTask();
+        downloadEqsAsyncTask.delegate = this;
 
         try {
             downloadEqsAsyncTask.execute(new URL("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_hour.geojson"));
@@ -70,6 +75,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onEqsDownloaded(String data) {
+        try {
+            JSONObject jsonObject = new JSONObject(data);
 
+            JSONArray featureJsonArray = jsonObject.getJSONArray("features");
 
+            for(int i = 0 ; i < featureJsonArray.length() ; i++) {
+                JSONObject featureJsonObject = featureJsonArray.getJSONObject(i);
+                JSONObject propertiesJsonObject = featureJsonObject.getJSONObject("properties");
+                double magnitude = propertiesJsonObject.getDouble("mag");
+                String place = propertiesJsonObject.getString("place");
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

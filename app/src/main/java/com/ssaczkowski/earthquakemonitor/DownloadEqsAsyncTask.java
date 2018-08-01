@@ -13,6 +13,13 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,String> {
+
+    public DownloadEqsInterface delegate;
+
+    public interface DownloadEqsInterface{
+        void onEqsDownloaded(String data);
+    }
+
     @Override
     protected String doInBackground(URL... urls) {
         String data = "";
@@ -25,9 +32,10 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,String> {
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        Log.d("MANZANA",s);
+    protected void onPostExecute(String eqData) {
+        super.onPostExecute(eqData);
+
+        delegate.onEqsDownloaded(eqData);
     }
 
     private String downloadData(URL url) throws IOException {
