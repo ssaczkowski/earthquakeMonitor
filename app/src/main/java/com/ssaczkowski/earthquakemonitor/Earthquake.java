@@ -2,15 +2,15 @@ package com.ssaczkowski.earthquakemonitor;
 
 public class Earthquake {
 
-    private String magnitude;
+    private double magnitude;
     private String place;
 
-    public Earthquake(String magnitude, String place) {
+    public Earthquake(double magnitude, String place) {
         this.magnitude = magnitude;
         this.place = place;
     }
 
-    public String getMagnitude() {
+    public double getMagnitude() {
         return magnitude;
     }
 
@@ -18,7 +18,7 @@ public class Earthquake {
         return place;
     }
 
-    public void setMagnitude(String magnitude) {
+    public void setMagnitude(double magnitude) {
         this.magnitude = magnitude;
     }
 
