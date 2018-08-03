@@ -7,10 +7,41 @@ public class Earthquake implements Parcelable {
 
     private double magnitude;
     private String place;
+    private long time;
+    private String longitude;
+    private String latitude;
 
-    public Earthquake(double magnitude, String place) {
+
+    public Earthquake(double magnitude, String place, long time, String longitude, String latitude) {
         this.magnitude = magnitude;
         this.place = place;
+        this.time = time;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long dateTime) {
+        this.time = dateTime;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     public double getMagnitude() {
@@ -43,6 +74,9 @@ public class Earthquake implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(magnitude);
         dest.writeString(place);
+        dest.writeDouble(time);
+        dest.writeString(longitude);
+        dest.writeString(latitude);
     }
 
     @SuppressWarnings("unused")

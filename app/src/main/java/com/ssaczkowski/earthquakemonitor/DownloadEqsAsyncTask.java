@@ -31,6 +31,7 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
         ArrayList<Earthquake> eqList = null;
         try {
             data = downloadData(urls[0]);
+            Log.d("LOG SABRI:",data);
             eqList = parseDataFromJson(data);
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,10 +54,19 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
 
                 double magnitude = propertiesJsonObject.getDouble("mag");
                 String place = propertiesJsonObject.getString("place");
+                long time = propertiesJsonObject.getLong("time");
 
-                eqList.add(new Earthquake(magnitude, place));
+
+                JSONObject geometryJsonObject = featureJsonObject.getJSONObject("geometry");
+                JSONArray coordinatesJsonArray = geometryJsonObject.getJSONArray("coordinates");
+
+                String longitude = coordinatesJsonArray.getString(0);
+                String latitude = coordinatesJsonArray.getString(1);
+
+                eqList.add(new Earthquake(magnitude, place, time, longitude, latitude));
 
             }
+
 
         } catch (JSONException e) {
             e.printStackTrace();

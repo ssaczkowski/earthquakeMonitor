@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         earthquakeListView = (ListView) findViewById(R.id.earthquake_list_view);
 
         DownloadEqsAsyncTask downloadEqsAsyncTask = null;
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
 
     }
 
