@@ -4,6 +4,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,31 +15,60 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
-public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,String> {
+public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquake>> {
 
     public DownloadEqsInterface delegate;
 
     public interface DownloadEqsInterface{
-        void onEqsDownloaded(String data);
+        void onEqsDownloaded(ArrayList<Earthquake> eqList);
     }
 
     @Override
-    protected String doInBackground(URL... urls) {
+    protected ArrayList<Earthquake> doInBackground(URL... urls) {
         String data = "";
+        ArrayList<Earthquake> eqList = null;
         try {
             data = downloadData(urls[0]);
+            eqList = parseDataFromJson(data);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return data;
+        return eqList;
+    }
+
+    private ArrayList<Earthquake> parseDataFromJson(String data) {
+        ArrayList<Earthquake> eqList = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+
+            JSONArray featureJsonArray = jsonObject.getJSONArray("features");
+
+            for(int i = 0 ; i < featureJsonArray.length() ; i++) {
+
+                JSONObject featureJsonObject = featureJsonArray.getJSONObject(i);
+                JSONObject propertiesJsonObject = featureJsonObject.getJSONObject("properties");
+
+                double magnitude = propertiesJsonObject.getDouble("mag");
+                String place = propertiesJsonObject.getString("place");
+
+                eqList.add(new Earthquake(magnitude, place));
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return eqList;
     }
 
     @Override
-    protected void onPostExecute(String eqData) {
-        super.onPostExecute(eqData);
+    protected void onPostExecute(ArrayList<Earthquake> eqList) {
+        super.onPostExecute(eqList);
 
-        delegate.onEqsDownloaded(eqData);
+        delegate.onEqsDownloaded(eqList);
     }
 
     private String downloadData(URL url) throws IOException {

@@ -1,7 +1,10 @@
 package com.ssaczkowski.earthquakemonitor;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.util.Log;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncTask.DownloadEqsInterface{
 
+    public static String SELECTED_EARTHQUAKE = "selectedEarthquake";
     private ListView earthquakeListView;
 
     @Override
@@ -48,31 +52,19 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
 
 
     @Override
-    public void onEqsDownloaded(String data) {
-        ArrayList<Earthquake> eqList = new ArrayList<>();
+    public void onEqsDownloaded(ArrayList<Earthquake> eqList) {
 
-        try {
-            JSONObject jsonObject = new JSONObject(data);
-
-            JSONArray featureJsonArray = jsonObject.getJSONArray("features");
-
-            for(int i = 0 ; i < featureJsonArray.length() ; i++) {
-
-                JSONObject featureJsonObject = featureJsonArray.getJSONObject(i);
-                JSONObject propertiesJsonObject = featureJsonObject.getJSONObject("properties");
-
-                double magnitude = propertiesJsonObject.getDouble("mag");
-                String place = propertiesJsonObject.getString("place");
-
-                eqList.add(new Earthquake(magnitude, place));
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        EqAdapter eqAdapter = new EqAdapter(this, R.layout.eq_list_item, eqList);
+        final EqAdapter eqAdapter = new EqAdapter(this, R.layout.eq_list_item, eqList);
         earthquakeListView.setAdapter(eqAdapter);
+
+        earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Earthquake selectedEarthquake = eqAdapter.getItem(position);
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra(SELECTED_EARTHQUAKE,selectedEarthquake);
+                startActivity(intent);
+            }
+        });
     }
 }
