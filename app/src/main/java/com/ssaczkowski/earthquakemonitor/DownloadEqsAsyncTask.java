@@ -1,5 +1,7 @@
 package com.ssaczkowski.earthquakemonitor;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -31,8 +33,12 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
         ArrayList<Earthquake> eqList = null;
         try {
             data = downloadData(urls[0]);
-            Log.d("LOG SABRI:",data);
+            //Seteo los terremotos.
             eqList = parseDataFromJson(data);
+            if(eqList.isEmpty()){
+               Log.d("AVISO:","LA LISTA DE TERREMOTOS ESTÁ VACÍA.");
+               eqList.add(new Earthquake(0.4,"Lugar de prueba",new Long(12345678),"3.4m","3.6m"));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
