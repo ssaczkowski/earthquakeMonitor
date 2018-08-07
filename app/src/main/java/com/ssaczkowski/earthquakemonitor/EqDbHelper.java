@@ -15,7 +15,8 @@ public class EqDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String EARTHQUAKE_DATABASE = "CREATE TABLE " + DATABASE_NAME + " (" +
+
+        String EARTHQUAKE_DATABASE = "CREATE TABLE " + EqContract.EqColumns.TABLE_NAME + " (" +
                 EqContract.EqColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 EqContract.EqColumns.MAGNITUDE + " REAL NOT NULL," +
                 EqContract.EqColumns.PLACE + " TEXT NOT NULL," +
@@ -30,7 +31,6 @@ public class EqDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + DATABASE_NAME);
-        DATABASE_VERSION = DATABASE_VERSION + 1;
         onCreate(db);
     }
 }
