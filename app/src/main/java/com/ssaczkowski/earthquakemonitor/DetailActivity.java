@@ -36,7 +36,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
     private String getStringDateFromTimestamp(long timestamp) {
-        SimpleDateFormat simpleDateFromat = new SimpleDateFormat("dd/MMM/yyyy - H:m:s", Locale.getDefault());
+        SimpleDateFormat simpleDateFromat = new SimpleDateFormat("dd/MMM/yyyy - HH:mm:ss", Locale.getDefault());
         Date date = new Date(timestamp);
 
         return simpleDateFromat.format(date);
