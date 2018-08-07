@@ -2,6 +2,9 @@ package com.ssaczkowski.earthquakemonitor;
 
 import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,6 +25,11 @@ import java.util.ArrayList;
 public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquake>> {
 
     public DownloadEqsInterface delegate;
+    private Context context;
+
+    public DownloadEqsAsyncTask(Context context) {
+        this.context = context;
+    }
 
     public interface DownloadEqsInterface{
         void onEqsDownloaded(ArrayList<Earthquake> eqList);
@@ -36,13 +44,32 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
 
             eqList = parseDataFromJson(data);
 
-           if(eqList.isEmpty()){
+            if(eqList.isEmpty()){
               Log.d("AVISO:", String.valueOf(R.string.error_msg_list_earthquake_empty));
+            }else{
+                saveEqsOnDatabase(eqList);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return eqList;
+    }
+
+    private void saveEqsOnDatabase(ArrayList<Earthquake> eqList) {
+        EqDbHelper eqDbHelper = new EqDbHelper(context);
+        SQLiteDatabase database = eqDbHelper.getWritableDatabase();
+
+        for (Earthquake earthquake : eqList){
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(EqContract.EqColumns.MAGNITUDE,earthquake.getMagnitude());
+            contentValues.put(EqContract.EqColumns.LATITUDE,earthquake.getMagnitude());
+            contentValues.put(EqContract.EqColumns.LONGITUDE,earthquake.getMagnitude());
+            contentValues.put(EqContract.EqColumns.PLACE,earthquake.getMagnitude());
+            contentValues.put(EqContract.EqColumns.TIMESTAMP,earthquake.getMagnitude());
+
+            database.insert(EqContract.EqColumns.TABLE_NAME,null,contentValues);
+        }
+
     }
 
     private ArrayList<Earthquake> parseDataFromJson(String data) {
