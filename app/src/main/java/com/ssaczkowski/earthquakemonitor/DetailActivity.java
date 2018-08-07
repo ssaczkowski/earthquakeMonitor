@@ -6,6 +6,10 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -28,9 +32,14 @@ public class DetailActivity extends AppCompatActivity {
             longitudeTextView.setText(earthquake.getLongitude());
             latitudeTextView.setText(earthquake.getLatitude());
             placeTextView.setText(String.valueOf(earthquake.getPlace()));
-            dateTimeTextView.setText(String.valueOf(String.valueOf(earthquake.getTime())));
-
+            dateTimeTextView.setText(getStringDateFromTimestamp(earthquake.getTime()));
         }
+    }
+    private String getStringDateFromTimestamp(long timestamp) {
+        SimpleDateFormat simpleDateFromat = new SimpleDateFormat("dd/MMM/yyyy - H:m:s", Locale.getDefault());
+        Date date = new Date(timestamp);
+
+        return simpleDateFromat.format(date);
     }
 
 }

@@ -33,12 +33,14 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
         ArrayList<Earthquake> eqList = null;
         try {
             data = downloadData(urls[0]);
+            Log.d("DATA JSON:",data);
             //Seteo los terremotos.
             eqList = parseDataFromJson(data);
-            if(eqList.isEmpty()){
-               Log.d("AVISO:","LA LISTA DE TERREMOTOS ESTÁ VACÍA.");
-               eqList.add(new Earthquake(0.4,"Lugar de prueba",new Long(12345678),"3.4m","3.6m"));
-            }
+            Log.d("AVISO:",eqList.isEmpty()+"");
+           // if(eqList.isEmpty()){
+             //  Log.d("AVISO:","LA LISTA DE TERREMOTOS ESTÁ VACÍA.");
+               //eqList.add(new Earthquake(0.4,"Lugar de prueba",new Long(12345678),"3.4m","3.6m"));
+           // }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,7 +74,6 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
                 eqList.add(new Earthquake(magnitude, place, time, longitude, latitude));
 
             }
-
 
         } catch (JSONException e) {
             e.printStackTrace();

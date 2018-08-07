@@ -64,6 +64,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/silver"
                     tools:text="Longitude"/>
             </LinearLayout>
             <LinearLayout
@@ -81,6 +82,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/silver"
                     tools:text="Latitude"/>
             </LinearLayout>
             <View

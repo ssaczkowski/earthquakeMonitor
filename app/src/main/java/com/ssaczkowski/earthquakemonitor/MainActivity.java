@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
         downloadEqsAsyncTask.delegate = this;
 
         try {
-            downloadEqsAsyncTask.execute(new URL("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"));
+            downloadEqsAsyncTask.execute(new URL("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson") );
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
