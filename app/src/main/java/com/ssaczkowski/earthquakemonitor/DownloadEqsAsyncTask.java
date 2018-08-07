@@ -36,7 +36,7 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
             Log.d("DATA JSON:",data);
             //Seteo los terremotos.
             eqList = parseDataFromJson(data);
-            Log.d("AVISO:",eqList.isEmpty()+"");
+            Log.d("ESTA VACIA:",eqList.isEmpty()+"");
            // if(eqList.isEmpty()){
              //  Log.d("AVISO:","LA LISTA DE TERREMOTOS ESTÁ VACÍA.");
                //eqList.add(new Earthquake(0.4,"Lugar de prueba",new Long(12345678),"3.4m","3.6m"));
