@@ -62,10 +62,10 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
         for (Earthquake earthquake : eqList){
             ContentValues contentValues = new ContentValues();
             contentValues.put(EqContract.EqColumns.MAGNITUDE,earthquake.getMagnitude());
-            contentValues.put(EqContract.EqColumns.LATITUDE,earthquake.getMagnitude());
-            contentValues.put(EqContract.EqColumns.LONGITUDE,earthquake.getMagnitude());
-            contentValues.put(EqContract.EqColumns.PLACE,earthquake.getMagnitude());
-            contentValues.put(EqContract.EqColumns.TIMESTAMP,earthquake.getMagnitude());
+            contentValues.put(EqContract.EqColumns.LATITUDE,earthquake.getLatitude());
+            contentValues.put(EqContract.EqColumns.LONGITUDE,earthquake.getLongitude());
+            contentValues.put(EqContract.EqColumns.PLACE,earthquake.getPlace());
+            contentValues.put(EqContract.EqColumns.TIMESTAMP,earthquake.getTime());
 
             database.insert(EqContract.EqColumns.TABLE_NAME,null,contentValues);
         }

@@ -18,11 +18,11 @@ public class EqDbHelper extends SQLiteOpenHelper {
 
         String EARTHQUAKE_DATABASE = "CREATE TABLE " + EqContract.EqColumns.TABLE_NAME + " (" +
                 EqContract.EqColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                EqContract.EqColumns.MAGNITUDE + " REAL NOT NULL," +
+                EqContract.EqColumns.MAGNITUDE + " TEXT NOT NULL," +
                 EqContract.EqColumns.PLACE + " TEXT NOT NULL," +
                 EqContract.EqColumns.LONGITUDE + " TEXT NOT NULL, " +
                 EqContract.EqColumns.LATITUDE + " TEXT NOT NULL, " +
-                EqContract.EqColumns.TIMESTAMP + "TEXT NOT NULL" +
+                EqContract.EqColumns.TIMESTAMP + " TEXT NOT NULL" +
                  ")";
 
         db.execSQL(EARTHQUAKE_DATABASE);
