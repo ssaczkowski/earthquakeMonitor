@@ -22,6 +22,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static com.ssaczkowski.earthquakemonitor.R.*;
+
 public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquake>> {
 
     public DownloadEqsInterface delegate;
@@ -44,11 +47,8 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
 
             eqList = parseDataFromJson(data);
 
-            if(eqList.isEmpty()){
-              Log.d("AVISO:", String.valueOf(R.string.error_msg_list_earthquake_empty));
-            }else{
-                saveEqsOnDatabase(eqList);
-            }
+            saveEqsOnDatabase(eqList);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
