@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_detail"
+    android:id="@+id/activity_main"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.ssaczkowski.earthquakemonitor.MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/last_earthquakes"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:paddingTop="25dp"
+            android:paddingBottom="10dp"
+            android:textSize="25dp"/>
         <ListView
             android:id="@+id/earthquake_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></ListView>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

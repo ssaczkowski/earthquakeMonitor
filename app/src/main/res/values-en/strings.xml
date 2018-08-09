@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EMonitor</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="download_earthquakes_network_error">There was an error downloading earthquake data.</string>
+    <string name="usgs_all_hour_earthquakes_url">https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson</string>
+    <string name="error_msg_list_earthquake_empty">No earthquakes have been detected.</string>
+    <string name="richter">Richter</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
+    <string name="last_earthquakes">Last Earthquakes</string>
+</resources>
