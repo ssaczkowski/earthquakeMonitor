@@ -22,7 +22,6 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_install:
-  - yes | sdkmanager --licenses
   - yes | sdkmanager "platforms;android-27"
   
   
