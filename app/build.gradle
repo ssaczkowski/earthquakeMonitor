@@ -6,6 +6,7 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
+        google()
     }
 }
 
@@ -38,4 +39,10 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile "com.android.support:support-core-utils:26.1.0"
+}
+
+buildscript {
+    repositories {
+        google()
+    }
 }
