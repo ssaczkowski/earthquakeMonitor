@@ -66,14 +66,16 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
 
     @Override
     protected void onStart() {
-        googleApiClient.connect();
         super.onStart();
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
     }
 
     @Override
     protected void onStop() {
-        googleApiClient.disconnect();
         super.onStop();
+        googleApiClient.disconnect();
     }
 
     private void getEarthquakesFromDb() {
@@ -135,8 +137,9 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Location userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
                 getUserLastLocation(userLocation);
             } else {
                 final String[] permissions = new String[]{ACCESS_FINE_LOCATION};
@@ -174,25 +177,21 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     }
 
     private void getUserLastLocation(Location userLocation) {
-        Toast.makeText(MainActivity.this, "SARAZA" + (userLocation != null), Toast.LENGTH_SHORT).show();
 
         if (userLocation != null) {
             TextView locationTextView = (TextView) findViewById(R.id.main_activity_location_textView);
             String longitude = String.valueOf(userLocation.getLongitude());
             String latitude = String.valueOf(userLocation.getLatitude());
-
-            locationTextView.setText("Longitude: " + longitude + ", Latitude: " + latitude);
-            Log.d("LONG ??? LATIT ??", "Longitude: " + longitude + ", Latitude: " + latitude);
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d("DATA", "CONNECT SUSPENDED");
+
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d("DATA", "CONNECT FAILED");
+
     }
 }
