@@ -9,4 +9,6 @@
     <string name="longitude">Longitude</string>
     <string name="latitude">Latitude</string>
     <string name="last_earthquakes">Last Earthquakes</string>
+    <string name="title_access_location_permission">"Access to the location of the telephone"</string>
+    <string name="info_msg_access_location_permission">"You must accept this permission to be able to use the app."</string>
 </resources>

@@ -22,6 +22,15 @@
             android:textColor="@color/black"
             android:textSize="25dp" />
 
+        <TextView
+            android:id="@+id/main_activity_location_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/red"
+            android:textSize="10dp" />
+
         <ListView
             android:id="@+id/earthquake_list_view"
             android:layout_width="match_parent"

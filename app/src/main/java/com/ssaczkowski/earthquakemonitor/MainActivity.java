@@ -1,28 +1,50 @@
 package com.ssaczkowski.earthquakemonitor;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncTask.DownloadEqsInterface {
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncTask.DownloadEqsInterface, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    public static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE = 0;
     public static String SELECTED_EARTHQUAKE = "selectedEarthquake";
     private ListView earthquakeListView;
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        addLocationServices();
 
         earthquakeListView = (ListView) findViewById(R.id.earthquake_list_view);
 
@@ -32,6 +54,26 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
             getEarthquakesFromDb();
         }
 
+    }
+
+    private void addLocationServices() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    protected void onStart() {
+        googleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
     }
 
     private void getEarthquakesFromDb() {
@@ -73,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
 
     private void fillEqList(ArrayList<Earthquake> eqList) {
         if (eqList.isEmpty()) {
-            Toast.makeText(this,String.valueOf(R.string.error_msg_list_earthquake_empty),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.valueOf(R.string.error_msg_list_earthquake_empty), Toast.LENGTH_SHORT).show();
         } else {
             final EqAdapter eqAdapter = new EqAdapter(this, R.layout.eq_list_item, eqList);
             earthquakeListView.setAdapter(eqAdapter);
@@ -88,5 +130,69 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
                 }
             });
         }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Location userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                getUserLastLocation(userLocation);
+            } else {
+                final String[] permissions = new String[]{ACCESS_FINE_LOCATION};
+                requestPermissions(permissions, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        } else {
+            Location userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+            getUserLastLocation(userLocation);
+        }
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE) {
+
+            if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.title_access_location_permission);
+                builder.setMessage(R.string.info_msg_access_location_permission);
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String[] permissions = new String[]{ACCESS_FINE_LOCATION};
+                        requestPermissions(permissions, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
+                    }
+                });
+
+                builder.show();
+            }
+        }
+    }
+
+    private void getUserLastLocation(Location userLocation) {
+        Toast.makeText(MainActivity.this, "SARAZA" + (userLocation != null), Toast.LENGTH_SHORT).show();
+
+        if (userLocation != null) {
+            TextView locationTextView = (TextView) findViewById(R.id.main_activity_location_textView);
+            String longitude = String.valueOf(userLocation.getLongitude());
+            String latitude = String.valueOf(userLocation.getLatitude());
+
+            locationTextView.setText("Longitude: " + longitude + ", Latitude: " + latitude);
+            Log.d("LONG ??? LATIT ??", "Longitude: " + longitude + ", Latitude: " + latitude);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d("DATA", "CONNECT SUSPENDED");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d("DATA", "CONNECT FAILED");
     }
 }
