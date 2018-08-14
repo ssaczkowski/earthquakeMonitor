@@ -56,7 +56,7 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
     }
 
     private void saveEqsOnDatabase(ArrayList<Earthquake> eqList) {
-        EqDbHelper eqDbHelper = new EqDbHelper(context);
+        EqDbHelper eqDbHelper = EqDbHelper.getInstance(context);
         SQLiteDatabase database = eqDbHelper.getWritableDatabase();
 
         for (Earthquake earthquake : eqList){

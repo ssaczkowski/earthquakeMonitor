@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     public static String SELECTED_EARTHQUAKE = "selectedEarthquake";
     private ListView earthquakeListView;
     private GoogleApiClient googleApiClient;
+    private static Location userLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     }
 
     private void getEarthquakesFromDb() {
-        EqDbHelper eqDbHelper = new EqDbHelper(this);
+        EqDbHelper eqDbHelper = EqDbHelper.getInstance(this);
         SQLiteDatabase database = eqDbHelper.getReadableDatabase();
 
         Cursor cursor = database.query(EqContract.EqColumns.TABLE_NAME, null, null, null, null, null, null);
@@ -193,5 +195,13 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public static Location getUserLocation() {
+        return userLocation;
+    }
+
+    public static void setUserLocation(Location userLocation) {
+        MainActivity.userLocation = userLocation;
     }
 }

@@ -6,11 +6,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.IntegerRes;
 
 public class EqDbHelper extends SQLiteOpenHelper {
+
+    private static EqDbHelper eqDbInstance = null;
     private static int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "emonitor.db";
 
-    public EqDbHelper(Context context) {
+    private EqDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static EqDbHelper getInstance(Context context){
+        if (eqDbInstance == null) {
+            eqDbInstance = new EqDbHelper(context.getApplicationContext());
+        }
+        return eqDbInstance;
     }
 
     @Override
