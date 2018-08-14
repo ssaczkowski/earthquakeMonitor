@@ -8,10 +8,10 @@ public class Earthquake implements Parcelable {
     private double magnitude;
     private String place;
     private Long time;
-    private String longitude;
-    private String latitude;
+    private Double longitude;
+    private Double latitude;
 
-    public Earthquake(double magnitude, String place, Long time, String longitude, String latitude) {
+    public Earthquake(double magnitude, String place, Long time, Double longitude, Double latitude) {
         this.magnitude = magnitude;
         this.place = place;
         this.time = time;
@@ -23,8 +23,8 @@ public class Earthquake implements Parcelable {
         this.magnitude = in.readDouble();
         this.place = in.readString();
         this.time = in.readLong();
-        this.longitude = in.readString();
-        this.latitude = in.readString();
+        this.longitude = in.readDouble();
+        this.latitude = in.readDouble();
     }
 
     public long getTime() {
@@ -35,19 +35,19 @@ public class Earthquake implements Parcelable {
         this.time = dateTime;
     }
 
-    public String getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
-    public String getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
@@ -77,8 +77,8 @@ public class Earthquake implements Parcelable {
         dest.writeDouble(magnitude);
         dest.writeString(place);
         dest.writeLong(time);
-        dest.writeString(longitude);
-        dest.writeString(latitude);
+        dest.writeDouble(longitude);
+        dest.writeDouble(latitude);
     }
 
     @SuppressWarnings("unused")

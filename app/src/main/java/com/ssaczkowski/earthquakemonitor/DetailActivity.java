@@ -29,8 +29,8 @@ public class DetailActivity extends AppCompatActivity {
             TextView dateTimeTextView = (TextView) findViewById(R.id.eq_detail_dateTime);
 
             magnitudeTextView.setText(String.valueOf(earthquake.getMagnitude()));
-            longitudeTextView.setText(earthquake.getLongitude());
-            latitudeTextView.setText(earthquake.getLatitude());
+            longitudeTextView.setText(String.valueOf(earthquake.getLongitude()));
+            latitudeTextView.setText(String.valueOf(earthquake.getLatitude()));
             placeTextView.setText(String.valueOf(earthquake.getPlace()));
             dateTimeTextView.setText(getStringDateFromTimestamp(earthquake.getTime()));
         }

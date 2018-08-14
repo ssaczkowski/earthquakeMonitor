@@ -93,8 +93,8 @@ public class DownloadEqsAsyncTask extends AsyncTask<URL,Void,ArrayList<Earthquak
                 JSONObject geometryJsonObject = featureJsonObject.getJSONObject("geometry");
                 JSONArray coordinatesJsonArray = geometryJsonObject.getJSONArray("coordinates");
 
-                String longitude = coordinatesJsonArray.getString(0);
-                String latitude = coordinatesJsonArray.getString(1);
+                Double longitude = Double.parseDouble(coordinatesJsonArray.getString(0));
+                Double latitude = Double.parseDouble(coordinatesJsonArray.getString(1));
 
                 eqList.add(new Earthquake(magnitude, place, time, longitude, latitude));
 

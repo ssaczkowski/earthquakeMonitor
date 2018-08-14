@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     private GoogleApiClient googleApiClient;
     @Nullable
     private GoogleMap mMap;
+    private Location userLocation;
 
 
     @Override
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
         }
 
     }
+
 
     private void addLocationServices() {
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -112,8 +114,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     }
 
     private void downloadEarthquakes() {
-        DownloadEqsAsyncTask downloadEqsAsyncTask = null;
-        downloadEqsAsyncTask = new DownloadEqsAsyncTask(this);
+        DownloadEqsAsyncTask downloadEqsAsyncTask = new DownloadEqsAsyncTask(this);
         downloadEqsAsyncTask.delegate = this;
 
         try {
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     @Override
     public void onEqsDownloaded(ArrayList<Earthquake> eqList) {
         fillEqList(eqList);
+        loadLastEarthquakesOnMap(eqList);
     }
 
     private void fillEqList(ArrayList<Earthquake> eqList) {
@@ -155,14 +157,15 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
                 Location userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
                 getUserLastLocation(userLocation);
+                loadUserLocationOnMap();
             } else {
                 final String[] permissions = new String[]{ACCESS_FINE_LOCATION};
                 requestPermissions(permissions, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
             }
         } else {
-            Location userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-
+            userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             getUserLastLocation(userLocation);
+            loadUserLocationOnMap();
         }
     }
 
@@ -214,16 +217,21 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // LatLng userLatLong = new LatLng(MainActivity.getUserLocation().getLatitude(), MainActivity.getUserLocation().getLongitude());
-        // mMap.addMarker(new MarkerOptions().position(userLatLong).title("Your Location !"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLong));
-        Log.d("SA_LOG","Entre al metodo onMapReady");
-        Log.i("SA_LOG","Entre al metodo onMapReady");
-        Log.v("SA_LOG","Entre al metodo onMapReady");
+    }
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    private void loadLastEarthquakesOnMap(ArrayList<Earthquake> eqList) {
+        for (int i = 0; i < eqList.size(); i++) {
+            LatLng latLong = new LatLng(eqList.get(i).getLatitude(), eqList.get(i).getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLong).title("Marker in " + eqList.get(i).getPlace()));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLong));
+        }
+    }
+
+    private void loadUserLocationOnMap() {
+        if (userLocation != null) {
+            LatLng userLatLong = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(userLatLong).title("Your Location !"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLong));
+        }
     }
 }
