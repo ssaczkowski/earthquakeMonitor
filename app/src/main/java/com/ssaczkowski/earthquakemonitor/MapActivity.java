@@ -1,7 +1,9 @@
 package com.ssaczkowski.earthquakemonitor;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,6 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    @Nullable
     private GoogleMap mMap;
 
     @Override
@@ -21,6 +24,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
         mapFragment.getMapAsync(this);
     }
 
@@ -41,6 +45,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
        // LatLng userLatLong = new LatLng(MainActivity.getUserLocation().getLatitude(), MainActivity.getUserLocation().getLongitude());
        // mMap.addMarker(new MarkerOptions().position(userLatLong).title("Your Location !"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLong));
+        Log.d("SA_LOG","Entre al metodo onMapReady");
+        Log.i("SA_LOG","Entre al metodo onMapReady");
+        Log.v("SA_LOG","Entre al metodo onMapReady");
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);

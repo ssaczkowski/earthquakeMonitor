@@ -25,6 +25,12 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,13 +38,14 @@ import java.util.ArrayList;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncTask.DownloadEqsInterface, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncTask.DownloadEqsInterface, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback {
 
     public static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE = 0;
     public static String SELECTED_EARTHQUAKE = "selectedEarthquake";
     private ListView earthquakeListView;
     private GoogleApiClient googleApiClient;
-    private static Location userLocation;
+    @Nullable
+    private GoogleMap mMap;
 
 
     @Override
@@ -47,6 +54,11 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
         setContentView(R.layout.activity_main);
 
         addLocationServices();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+
+        mapFragment.getMapAsync(this);
 
         earthquakeListView = (ListView) findViewById(R.id.earthquake_list_view);
 
@@ -197,11 +209,21 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
 
     }
 
-    public static Location getUserLocation() {
-        return userLocation;
-    }
 
-    public static void setUserLocation(Location userLocation) {
-        MainActivity.userLocation = userLocation;
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // LatLng userLatLong = new LatLng(MainActivity.getUserLocation().getLatitude(), MainActivity.getUserLocation().getLongitude());
+        // mMap.addMarker(new MarkerOptions().position(userLatLong).title("Your Location !"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLong));
+        Log.d("SA_LOG","Entre al metodo onMapReady");
+        Log.i("SA_LOG","Entre al metodo onMapReady");
+        Log.v("SA_LOG","Entre al metodo onMapReady");
+
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 }
