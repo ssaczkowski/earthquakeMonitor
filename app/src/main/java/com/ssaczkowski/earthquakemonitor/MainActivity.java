@@ -1,6 +1,5 @@
 package com.ssaczkowski.earthquakemonitor;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,11 +10,9 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -231,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
         if (userLocation != null) {
             LatLng userLatLong = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
             mMap.addMarker(new MarkerOptions().position(userLatLong).title("Your Location !"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLong));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLong,150));
         }
     }
 }

@@ -1,8 +1,14 @@
 <resources>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_map">Map</string>
-    <string name="title_activity_maps2">Map</string>
-
+    <string name="app_name">EMonitor</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="download_earthquakes_network_error">Hubo un error al descargar la información de terremotos.</string>
+    <string name="usgs_all_hour_earthquakes_url">https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson</string>
+    <string name="error_msg_list_earthquake_empty">No han sido detectado terremotos.</string>
+    <string name="richter">Richter</string>
+    <string name="longitude">Longitud</string>
+    <string name="latitude">Latitud</string>
+    <string name="last_earthquakes">Últimos terremotos</string>
+    <string name="title_access_location_permission">"Acceder a la ubicación del telefono"</string>
+    <string name="info_msg_access_location_permission">"Debes aceptar este permiso para poder utilizar la app."</string>
 </resources>
