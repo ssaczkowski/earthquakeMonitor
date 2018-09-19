@@ -11,4 +11,6 @@
     <string name="last_earthquakes">Últimos terremotos</string>
     <string name="title_access_location_permission">"Acceder a la ubicación del telefono"</string>
     <string name="info_msg_access_location_permission">"Debes aceptar este permiso para poder utilizar la app."</string>
+    <string name="your_ubication">"Tu ubicación: "</string>
+    <string name="accept">Aceptar</string>
 </resources>

@@ -19,17 +19,8 @@
             android:paddingTop="25dp"
             android:text="@string/last_earthquakes"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/textColorDark"
             android:textSize="25dp" />
-
-        <TextView
-            android:id="@+id/main_activity_location_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textColor="@color/red"
-            android:textSize="10dp"/>
 
         <fragment
             android:id="@+id/map"

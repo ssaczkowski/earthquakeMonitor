@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -29,9 +32,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     @Nullable
     private GoogleMap mMap;
     private Location userLocation;
+    private Geocoder geocoder;
 
 
     @Override
@@ -60,11 +67,11 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
 
         earthquakeListView = (ListView) findViewById(R.id.earthquake_list_view);
 
-        if (Utils.isNetworkAvailable(this)) {
+        //if (Utils.isNetworkAvailable(this)) {
             downloadEarthquakes();
-        } else {
-            getEarthquakesFromDb();
-        }
+        //} else {
+          //  getEarthquakesFromDb();
+        //}
 
     }
 
@@ -125,14 +132,18 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     @Override
     public void onEqsDownloaded(ArrayList<Earthquake> eqList) {
         fillEqList(eqList);
+        verifyUserProximity(eqList);
         loadLastEarthquakesOnMap(eqList);
     }
 
+
     private void fillEqList(ArrayList<Earthquake> eqList) {
+
         if (eqList.isEmpty()) {
             Toast.makeText(this, String.valueOf(R.string.error_msg_list_earthquake_empty), Toast.LENGTH_SHORT).show();
         } else {
             final EqAdapter eqAdapter = new EqAdapter(this, R.layout.eq_list_item, eqList);
+
             earthquakeListView.setAdapter(eqAdapter);
 
             earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -145,24 +156,24 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
                 }
             });
         }
+
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Location userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+               // getUserLastLocation(userLocation);
 
-                getUserLastLocation(userLocation);
-                loadUserLocationOnMap();
             } else {
                 final String[] permissions = new String[]{ACCESS_FINE_LOCATION};
                 requestPermissions(permissions, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
             }
         } else {
             userLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            getUserLastLocation(userLocation);
-            loadUserLocationOnMap();
+            //getUserLastLocation(userLocation);
+
         }
     }
 
@@ -177,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.title_access_location_permission);
                 builder.setMessage(R.string.info_msg_access_location_permission);
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final String[] permissions = new String[]{ACCESS_FINE_LOCATION};
@@ -191,11 +202,28 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     }
 
     private void getUserLastLocation(Location userLocation) {
-
         if (userLocation != null) {
-            TextView locationTextView = (TextView) findViewById(R.id.main_activity_location_textView);
-            String longitude = String.valueOf(userLocation.getLongitude());
-            String latitude = String.valueOf(userLocation.getLatitude());
+           // TextView locationTextView = (TextView) findViewById(R.id.main_activity_location_textView);
+
+            Double longitude = userLocation.getLongitude();
+            Double latitude = userLocation.getLatitude();
+            try {
+                geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+                String address = addresses.get(0).getAddressLine(0);
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName();
+
+
+               // locationTextView.setText(R.string.your_ubication + state + "|"+ address + "|"+postalCode+"|"+ knownName +" |" +city + " |" + country );
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -217,18 +245,39 @@ public class MainActivity extends AppCompatActivity implements DownloadEqsAsyncT
     }
 
     private void loadLastEarthquakesOnMap(ArrayList<Earthquake> eqList) {
-        for (int i = 0; i < eqList.size(); i++) {
-            LatLng latLong = new LatLng(eqList.get(i).getLatitude(), eqList.get(i).getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLong).title("Marker in " + eqList.get(i).getPlace()));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLong));
+        if (eqList != null) {
+            for (int i = 0; i < eqList.size(); i++) {
+                LatLng latLong = new LatLng(eqList.get(i).getLatitude(), eqList.get(i).getLongitude());
+                mMap.addMarker(new MarkerOptions().position(latLong).title("Marker in " + eqList.get(i).getPlace()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLong));
+            }
         }
     }
 
-    private void loadUserLocationOnMap() {
+    private void verifyUserProximity(ArrayList<Earthquake> eqList) {
         if (userLocation != null) {
-            LatLng userLatLong = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(userLatLong).title("Your Location !"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLatLong,150));
+            Boolean proximity = false;
+            int i = 0;
+
+            while (i < eqList.size() || proximity != true) {
+
+                Location locationActual = new Location("");
+                locationActual.setLatitude(eqList.get(i).getLatitude());
+                locationActual.setLongitude(eqList.get(i).getLongitude());
+
+                int distanceToEarthquake = Math.round(locationActual.distanceTo(userLocation));
+
+                if (distanceToEarthquake < 2000) {
+                    //TextView proximityTextView = (TextView) findViewById(R.id.main_activity_proximity);
+
+                    proximity = true;
+
+                    //proximityTextView.setText("¿ Proximity?" + proximity);
+                }
+
+
+            }
         }
+
     }
 }
